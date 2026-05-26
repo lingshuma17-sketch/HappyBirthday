@@ -153,13 +153,11 @@
             transform: translate(-50%, -50%) scale(1);
             transform-origin: center center;
             perspective: 1100px;
-            transition: transform 0.5s ease;
         }
         #pw-carousel {
             width: 220px; height: 290px;
             transform-style: preserve-3d;
             transform: rotateY(0deg);
-            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
         }
         .pw-slide {
@@ -489,14 +487,13 @@
         let cheersPhase = false;
         let giftOpened = false;
 
-        // 3D 轮播状态
+        // 3D 轮播状态 — 完全速度驱动，镜像粒子系统
         let carouselAngle = 0;
+        let carouselVelocity = 0;
         let carouselScale = 1;
-        let swipeAccum = 0;
+        let zoomVelocity = 0;
         let lastPalmX = null;
-        let swipeCooldown = 0;
-        let palmFrameCount = 0;
-        let fistFrameCount = 0;
+        let handInWall = false;
         
         let currentState = STATE.INTRO;
         let interactionMode = 0; 
@@ -1095,12 +1092,11 @@
 
             // 重置轮播状态
             carouselAngle = 0;
+            carouselVelocity = 0;
             carouselScale = 1;
-            swipeAccum = 0;
+            zoomVelocity = 0;
             lastPalmX = null;
-            swipeCooldown = 0;
-            palmFrameCount = 0;
-            fistFrameCount = 0;
+            handInWall = false;
             updateCarousel();
 
             // 生成彩色粒子小球
@@ -1129,8 +1125,10 @@
         document.getElementById('photo-wall-close').addEventListener('click', (e) => {
             e.stopPropagation();
             document.getElementById('photo-wall').classList.add('hidden');
+            carouselVelocity = 0;
+            zoomVelocity = 0;
             lastPalmX = null;
-            swipeAccum = 0;
+            handInWall = false;
         });
 
         
@@ -1281,41 +1279,27 @@
 
                     // 照片墙开启时：专属手势，跳过背景检测
                     if (!document.getElementById('photo-wall').classList.contains('hidden')) {
-                        // 左右拨动切换
+                        handInWall = true;
+
+                        // 连续旋转：手掌位移累积速度（镜像主页手势旋转逻辑）
                         const palmX = lm[9].x;
                         if (lastPalmX !== null) {
-                            swipeAccum += palmX - lastPalmX;
-                            swipeAccum *= 0.85;
+                            const delta = palmX - lastPalmX;
+                            if (Math.abs(delta) > 0.001) {
+                                carouselVelocity += delta * -120;
+                            }
                         }
                         lastPalmX = palmX;
-                        if (swipeCooldown > 0) swipeCooldown--;
-                        if (swipeCooldown === 0 && Math.abs(swipeAccum) > 0.12) {
-                            if (swipeAccum > 0) carouselPrev(); else carouselNext();
-                            swipeAccum = 0;
-                            swipeCooldown = 20;
-                        }
-                        // 张手放大
+
+                        // 连续缩放：持续检测手势，每帧设定速度
                         if (isOpenPalmGesture(lm)) {
-                            palmFrameCount++;
-                            fistFrameCount = 0;
-                            if (palmFrameCount >= 8) {
-                                palmFrameCount = 0;
-                                carouselScale = Math.min(1.6, carouselScale + 0.15);
-                                updateCarousel();
-                            }
-                        // 握拳缩小
+                            zoomVelocity = 0.012;
                         } else if (isFistGesture(lm)) {
-                            fistFrameCount++;
-                            palmFrameCount = 0;
-                            if (fistFrameCount >= 8) {
-                                fistFrameCount = 0;
-                                carouselScale = Math.max(0.5, carouselScale - 0.15);
-                                updateCarousel();
-                            }
+                            zoomVelocity = -0.012;
                         } else {
-                            palmFrameCount = Math.max(0, palmFrameCount - 1);
-                            fistFrameCount = Math.max(0, fistFrameCount - 1);
+                            zoomVelocity = 0;
                         }
+
                         return;
                     }
 
@@ -1395,6 +1379,21 @@
         function render() {
             requestAnimationFrame(render);
             updateParticles();
+
+            // 轮播每帧更新（镜像粒子系统的速度衰减逻辑）
+            const photoWall = document.getElementById('photo-wall');
+            if (photoWall && !photoWall.classList.contains('hidden')) {
+                carouselVelocity *= 0.88;
+                carouselAngle += carouselVelocity;
+                carouselScale = Math.max(0.5, Math.min(1.6, carouselScale + zoomVelocity));
+                if (!handInWall) {
+                    zoomVelocity *= 0.75;
+                    lastPalmX = null;
+                }
+                handInWall = false;
+                updateCarousel();
+            }
+
             renderer.render(scene, camera);
         }
     </script>
