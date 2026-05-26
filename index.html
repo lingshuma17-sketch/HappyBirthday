@@ -147,46 +147,41 @@
         }
         #photo-wall-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
 
-        /* 挂绳卡片 */
-        .pw-hanger {
-            position: absolute; top: 0;
-            display: flex; flex-direction: column; align-items: center;
-            transform: translateX(-50%);
-            transform-origin: top center;
-            animation: hangerSwing ease-in-out infinite;
+        /* 3D 轮播 */
+        #pw-scene {
+            position: absolute; top: 54%; left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transform-origin: center center;
+            perspective: 1100px;
+            transition: transform 0.5s ease;
         }
-        @keyframes hangerSwing {
-            0%,100% { transform: translateX(-50%) rotate(1.2deg); }
-            50%      { transform: translateX(-50%) rotate(-1.2deg); }
+        #pw-carousel {
+            width: 220px; height: 290px;
+            transform-style: preserve-3d;
+            transform: rotateY(0deg);
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
         }
-        .pw-string {
-            width: 1.5px;
-            background: linear-gradient(180deg, rgba(210,170,90,0.05) 0%, rgba(210,170,90,0.85) 100%);
-            flex-shrink: 0;
+        .pw-slide {
+            position: absolute; top: 0; left: 0;
+            width: 220px; height: 290px;
+            transform: rotateY(calc(var(--i) * 60deg)) translateZ(360px);
+            backface-visibility: hidden;
         }
-        .pw-card {
-            filter: drop-shadow(0 10px 28px rgba(0,0,0,0.8));
-            animation: pFlyIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-            cursor: pointer;
+        .pw-slide-inner {
+            background: white;
+            padding: 10px 10px 48px 10px;
+            width: 100%; height: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.75);
         }
-        .pw-inner {
-            background: #fff;
-            padding: 8px 8px 34px 8px;
-            transition: transform 0.3s;
-        }
-        .pw-card:hover .pw-inner { transform: scale(1.07); }
-        .pw-inner img {
-            width: clamp(110px, 12vw, 160px);
-            height: clamp(88px, 9.6vw, 128px);
+        .pw-slide img {
+            width: 100%; height: 190px;
             object-fit: cover; display: block;
         }
-        .pw-label {
-            text-align: center; color: #777; font-size: 11px;
-            font-family: 'Dancing Script', cursive; padding-top: 6px;
-        }
-        @keyframes pFlyIn {
-            from { opacity: 0; transform: translateY(-60px) scale(0.5); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
+        .pw-slide-label {
+            text-align: center; color: #888; font-size: 12px;
+            font-family: 'Dancing Script', cursive; padding-top: 8px;
         }
 
         /* 粒子小球 */
@@ -197,6 +192,20 @@
         @keyframes bubbleFloat {
             0%,100% { transform: translateY(0) scale(1); opacity: 0.85; }
             50%     { transform: translateY(-18px) scale(1.08); opacity: 1; }
+        }
+        @keyframes heartFloat {
+            0%   { transform: translate(0,0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--hx, 0), -130px) scale(0.4); opacity: 0; }
+        }
+        #pw-gesture-hint {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 20px; z-index: 620; pointer-events: none;
+            background: rgba(0,0,0,0.45); border-radius: 30px;
+            padding: 8px 22px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .pw-hint-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 12px; color: rgba(255,255,255,0.6);
         }
 
 
@@ -278,42 +287,50 @@
         <div id="photo-wall-title">Happy Birthday 🎂</div>
         <button id="photo-wall-close">✕</button>
         <div id="pw-bubbles"></div>
+        <div id="pw-gesture-hint">
+            <div class="pw-hint-item">👈👉 拨动切换</div>
+            <div class="pw-hint-item">🖐️ 张手放大</div>
+            <div class="pw-hint-item">✊ 握拳缩小</div>
+        </div>
 
-        <!-- 每个 pw-hanger：left=绳子中心横坐标，animation-duration=摆动周期，animation-delay=错开相位 -->
-        <div class="pw-hanger" style="left:9%;animation-duration:4.2s;animation-delay:0s">
-            <div class="pw-string" style="height:8vh"></div>
-            <div class="pw-card" style="transform:rotate(-9deg);animation-delay:0.05s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174603_244_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
-            </div>
-        </div>
-        <div class="pw-hanger" style="left:27%;animation-duration:3.8s;animation-delay:0.6s">
-            <div class="pw-string" style="height:5vh"></div>
-            <div class="pw-card" style="transform:rotate(5deg);animation-delay:0.15s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174604_245_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
-            </div>
-        </div>
-        <div class="pw-hanger" style="left:47%;animation-duration:4.6s;animation-delay:0.3s">
-            <div class="pw-string" style="height:10vh"></div>
-            <div class="pw-card" style="transform:rotate(-4deg);animation-delay:0.25s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174605_246_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
-            </div>
-        </div>
-        <div class="pw-hanger" style="left:69%;animation-duration:4s;animation-delay:1s">
-            <div class="pw-string" style="height:6vh"></div>
-            <div class="pw-card" style="transform:rotate(8deg);animation-delay:0.35s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174607_248_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
-            </div>
-        </div>
-        <div class="pw-hanger" style="left:18%;animation-duration:5s;animation-delay:0.4s">
-            <div class="pw-string" style="height:36vh"></div>
-            <div class="pw-card" style="transform:rotate(-6deg);animation-delay:0.45s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174641_249_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
-            </div>
-        </div>
-        <div class="pw-hanger" style="left:57%;animation-duration:4.4s;animation-delay:0.8s">
-            <div class="pw-string" style="height:33vh"></div>
-            <div class="pw-card" style="transform:rotate(10deg);animation-delay:0.55s">
-                <div class="pw-inner"><img src="photo/微信图片_20260526174736_250_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div id="pw-scene">
+            <div id="pw-carousel">
+                <div class="pw-slide" style="--i:0">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174603_244_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
+                <div class="pw-slide" style="--i:1">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174604_245_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
+                <div class="pw-slide" style="--i:2">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174605_246_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
+                <div class="pw-slide" style="--i:3">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174607_248_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
+                <div class="pw-slide" style="--i:4">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174641_249_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
+                <div class="pw-slide" style="--i:5">
+                    <div class="pw-slide-inner">
+                        <img src="photo/微信图片_20260526174736_250_3.jpg">
+                        <div class="pw-slide-label">Happy Birthday ✨</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -471,6 +488,15 @@
         let okFrameCount = 0;
         let cheersPhase = false;
         let giftOpened = false;
+
+        // 3D 轮播状态
+        let carouselAngle = 0;
+        let carouselScale = 1;
+        let swipeAccum = 0;
+        let lastPalmX = null;
+        let swipeCooldown = 0;
+        let palmFrameCount = 0;
+        let fistFrameCount = 0;
         
         let currentState = STATE.INTRO;
         let interactionMode = 0; 
@@ -494,7 +520,6 @@
         let autoEntrySeconds = 10;
         
         let audioContext, analyser;
-        const bgm = document.getElementById('bgm');
 
         const ui = {
             startOverlay: document.getElementById('start-overlay'),
@@ -892,6 +917,17 @@
             }, 1500);
         }
 
+        // 3D 轮播函数
+        function updateCarousel() {
+            const carousel = document.getElementById('pw-carousel');
+            const pwScene = document.getElementById('pw-scene');
+            if (carousel) carousel.style.transform = `rotateY(${carouselAngle}deg)`;
+            if (pwScene) pwScene.style.transform = `translate(-50%, -50%) scale(${carouselScale})`;
+        }
+
+        function carouselNext() { carouselAngle -= 60; updateCarousel(); }
+        function carouselPrev() { carouselAngle += 60; updateCarousel(); }
+
         function isOkGesture(lm) {
             // 剪刀手✌️：食指+中指伸直，无名指+小拇指弯曲
             return lm[8].y < lm[6].y &&
@@ -1046,10 +1082,8 @@
             interactionMode = 1;
             transitionTo('cake');
             ui.statusText.innerText = "INTERACTIVE MODE: DRAG TO ROTATE";
-            ui.typewriter.innerHTML = "";
             ui.topBanner.classList.remove('hidden');
 
-            // 收起卡片后显示彩蛋按钮
             document.getElementById('easter-egg-btn').classList.remove('hidden');
         });
 
@@ -1059,12 +1093,15 @@
             const wall = document.getElementById('photo-wall');
             wall.classList.remove('hidden');
 
-            // 重置动画（重新飞入 + 重新摆动）
-            wall.querySelectorAll('.pw-card, .pw-hanger').forEach(el => {
-                el.style.animation = 'none';
-                el.offsetHeight;
-                el.style.animation = '';
-            });
+            // 重置轮播状态
+            carouselAngle = 0;
+            carouselScale = 1;
+            swipeAccum = 0;
+            lastPalmX = null;
+            swipeCooldown = 0;
+            palmFrameCount = 0;
+            fistFrameCount = 0;
+            updateCarousel();
 
             // 生成彩色粒子小球
             const container = document.getElementById('pw-bubbles');
@@ -1092,6 +1129,8 @@
         document.getElementById('photo-wall-close').addEventListener('click', (e) => {
             e.stopPropagation();
             document.getElementById('photo-wall').classList.add('hidden');
+            lastPalmX = null;
+            swipeAccum = 0;
         });
 
         
@@ -1238,8 +1277,49 @@
                     if (currentState === STATE.IDLE) {
                         startSequence();
                     }
-                    // Cheers 阶段：剪刀手✌️触发礼物
                     const lm = results.multiHandLandmarks[0];
+
+                    // 照片墙开启时：专属手势，跳过背景检测
+                    if (!document.getElementById('photo-wall').classList.contains('hidden')) {
+                        // 左右拨动切换
+                        const palmX = lm[9].x;
+                        if (lastPalmX !== null) {
+                            swipeAccum += palmX - lastPalmX;
+                            swipeAccum *= 0.85;
+                        }
+                        lastPalmX = palmX;
+                        if (swipeCooldown > 0) swipeCooldown--;
+                        if (swipeCooldown === 0 && Math.abs(swipeAccum) > 0.12) {
+                            if (swipeAccum > 0) carouselPrev(); else carouselNext();
+                            swipeAccum = 0;
+                            swipeCooldown = 20;
+                        }
+                        // 张手放大
+                        if (isOpenPalmGesture(lm)) {
+                            palmFrameCount++;
+                            fistFrameCount = 0;
+                            if (palmFrameCount >= 8) {
+                                palmFrameCount = 0;
+                                carouselScale = Math.min(1.6, carouselScale + 0.15);
+                                updateCarousel();
+                            }
+                        // 握拳缩小
+                        } else if (isFistGesture(lm)) {
+                            fistFrameCount++;
+                            palmFrameCount = 0;
+                            if (fistFrameCount >= 8) {
+                                fistFrameCount = 0;
+                                carouselScale = Math.max(0.5, carouselScale - 0.15);
+                                updateCarousel();
+                            }
+                        } else {
+                            palmFrameCount = Math.max(0, palmFrameCount - 1);
+                            fistFrameCount = Math.max(0, fistFrameCount - 1);
+                        }
+                        return;
+                    }
+
+                    // Cheers 阶段：剪刀手✌️触发礼物
                     if (currentState === STATE.CHEERS && !cheersPhase && !giftOpened) {
                         if (isOkGesture(lm)) {
                             okFrameCount++;
