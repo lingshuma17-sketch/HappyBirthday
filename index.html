@@ -120,25 +120,26 @@
         /* 照片墙 */
         #photo-wall {
             position: fixed; inset: 0; z-index: 600;
-            background: rgba(4, 0, 12, 0.92);
-            backdrop-filter: blur(8px);
+            background: rgba(4, 0, 14, 0.93);
+            backdrop-filter: blur(6px);
             pointer-events: auto;
             animation: wallFadeIn 0.5s ease forwards;
+            overflow: hidden;
         }
         #photo-wall.hidden { display: none !important; }
         @keyframes wallFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         #photo-wall-title {
-            position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-            font-family: 'Dancing Script', cursive; font-size: clamp(1.6rem, 4vw, 2.6rem);
+            position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+            font-family: 'Dancing Script', cursive; font-size: clamp(1.5rem, 3.5vw, 2.4rem);
             background: linear-gradient(to right, #c8860a, #e8c35a, #c8860a);
             -webkit-background-clip: text; background-clip: text; color: transparent;
-            text-shadow: none; filter: drop-shadow(0 0 12px rgba(212,160,23,0.8));
+            filter: drop-shadow(0 0 12px rgba(212,160,23,0.8));
             white-space: nowrap; z-index: 610; pointer-events: none;
         }
         #photo-wall-close {
-            position: absolute; top: 18px; right: 20px; z-index: 620;
-            width: 42px; height: 42px; border-radius: 50%;
+            position: absolute; top: 14px; right: 16px; z-index: 620;
+            width: 40px; height: 40px; border-radius: 50%;
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
             color: white; font-size: 18px; cursor: pointer;
             display: flex; justify-content: center; align-items: center;
@@ -146,29 +147,56 @@
         }
         #photo-wall-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
 
+        /* 挂绳卡片 */
+        .pw-hanger {
+            position: absolute; top: 0;
+            display: flex; flex-direction: column; align-items: center;
+            transform: translateX(-50%);
+            transform-origin: top center;
+            animation: hangerSwing ease-in-out infinite;
+        }
+        @keyframes hangerSwing {
+            0%,100% { transform: translateX(-50%) rotate(1.2deg); }
+            50%      { transform: translateX(-50%) rotate(-1.2deg); }
+        }
+        .pw-string {
+            width: 1.5px;
+            background: linear-gradient(180deg, rgba(210,170,90,0.05) 0%, rgba(210,170,90,0.85) 100%);
+            flex-shrink: 0;
+        }
         .pw-card {
-            position: absolute;
-            filter: drop-shadow(0 8px 22px rgba(0,0,0,0.75));
-            animation: pFlyIn 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            filter: drop-shadow(0 10px 28px rgba(0,0,0,0.8));
+            animation: pFlyIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            cursor: pointer;
         }
         .pw-inner {
             background: #fff;
             padding: 8px 8px 34px 8px;
             transition: transform 0.3s;
         }
-        .pw-card:hover .pw-inner { transform: scale(1.06); }
+        .pw-card:hover .pw-inner { transform: scale(1.07); }
         .pw-inner img {
-            width: clamp(120px, 13vw, 168px);
-            height: clamp(96px, 10.5vw, 135px);
+            width: clamp(110px, 12vw, 160px);
+            height: clamp(88px, 9.6vw, 128px);
             object-fit: cover; display: block;
         }
         .pw-label {
-            text-align: center; color: #666; font-size: 12px;
+            text-align: center; color: #777; font-size: 11px;
             font-family: 'Dancing Script', cursive; padding-top: 6px;
         }
         @keyframes pFlyIn {
-            from { opacity: 0; transform: translateY(90px) scale(0.55); }
-            to   { opacity: 1; transform: translateY(0)   scale(1); }
+            from { opacity: 0; transform: translateY(-60px) scale(0.5); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* 粒子小球 */
+        .pw-bubble {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            animation: bubbleFloat ease-in-out infinite;
+        }
+        @keyframes bubbleFloat {
+            0%,100% { transform: translateY(0) scale(1); opacity: 0.85; }
+            50%     { transform: translateY(-18px) scale(1.08); opacity: 1; }
         }
 
 
@@ -247,26 +275,46 @@
 
     <!-- 照片墙 -->
     <div id="photo-wall" class="hidden">
-        <div id="photo-wall-title">Happy Birthday, 李一航 🎂</div>
+        <div id="photo-wall-title">Happy Birthday 🎂</div>
         <button id="photo-wall-close">✕</button>
+        <div id="pw-bubbles"></div>
 
-        <div class="pw-card" style="top:14%;left:3%;transform:rotate(-9deg);animation-delay:0s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174603_244_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <!-- 每个 pw-hanger：left=绳子中心横坐标，animation-duration=摆动周期，animation-delay=错开相位 -->
+        <div class="pw-hanger" style="left:9%;animation-duration:4.2s;animation-delay:0s">
+            <div class="pw-string" style="height:8vh"></div>
+            <div class="pw-card" style="transform:rotate(-9deg);animation-delay:0.05s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174603_244_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
-        <div class="pw-card" style="top:10%;left:24%;transform:rotate(5deg);animation-delay:0.1s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174604_245_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div class="pw-hanger" style="left:27%;animation-duration:3.8s;animation-delay:0.6s">
+            <div class="pw-string" style="height:5vh"></div>
+            <div class="pw-card" style="transform:rotate(5deg);animation-delay:0.15s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174604_245_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
-        <div class="pw-card" style="top:12%;left:46%;transform:rotate(-4deg);animation-delay:0.2s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174605_246_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div class="pw-hanger" style="left:47%;animation-duration:4.6s;animation-delay:0.3s">
+            <div class="pw-string" style="height:10vh"></div>
+            <div class="pw-card" style="transform:rotate(-4deg);animation-delay:0.25s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174605_246_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
-        <div class="pw-card" style="top:9%;left:68%;transform:rotate(8deg);animation-delay:0.3s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174607_248_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div class="pw-hanger" style="left:69%;animation-duration:4s;animation-delay:1s">
+            <div class="pw-string" style="height:6vh"></div>
+            <div class="pw-card" style="transform:rotate(8deg);animation-delay:0.35s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174607_248_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
-        <div class="pw-card" style="top:52%;left:10%;transform:rotate(-6deg);animation-delay:0.4s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174641_249_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div class="pw-hanger" style="left:18%;animation-duration:5s;animation-delay:0.4s">
+            <div class="pw-string" style="height:36vh"></div>
+            <div class="pw-card" style="transform:rotate(-6deg);animation-delay:0.45s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174641_249_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
-        <div class="pw-card" style="top:50%;left:52%;transform:rotate(10deg);animation-delay:0.5s">
-            <div class="pw-inner"><img src="photo/微信图片_20260526174736_250_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+        <div class="pw-hanger" style="left:57%;animation-duration:4.4s;animation-delay:0.8s">
+            <div class="pw-string" style="height:33vh"></div>
+            <div class="pw-card" style="transform:rotate(10deg);animation-delay:0.55s">
+                <div class="pw-inner"><img src="photo/微信图片_20260526174736_250_3.jpg"><div class="pw-label">Happy Birthday ✨</div></div>
+            </div>
         </div>
     </div>
     
@@ -1010,12 +1058,34 @@
             e.stopPropagation();
             const wall = document.getElementById('photo-wall');
             wall.classList.remove('hidden');
-            // 重置动画（重新飞入）
-            wall.querySelectorAll('.pw-card').forEach(card => {
-                card.style.animation = 'none';
-                card.offsetHeight; // reflow
-                card.style.animation = '';
+
+            // 重置动画（重新飞入 + 重新摆动）
+            wall.querySelectorAll('.pw-card, .pw-hanger').forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight;
+                el.style.animation = '';
             });
+
+            // 生成彩色粒子小球
+            const container = document.getElementById('pw-bubbles');
+            container.innerHTML = '';
+            const colors = ['#ff4444','#ff8c00','#ffd700','#44cc44','#00bcd4','#7c4dff','#e91e8c','#ff6b6b','#69c0ff','#b7eb8f'];
+            for (let i = 0; i < 35; i++) {
+                const b = document.createElement('div');
+                b.className = 'pw-bubble';
+                const size = 10 + Math.random() * 18;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                b.style.cssText = `
+                    width:${size}px; height:${size}px;
+                    left:${Math.random() * 96}%;
+                    top:${Math.random() * 90}%;
+                    background: radial-gradient(circle at 35% 35%, white, ${color});
+                    box-shadow: 0 0 ${size*0.6}px ${color}88;
+                    animation-duration:${2.5 + Math.random() * 3}s;
+                    animation-delay:${Math.random() * 2}s;
+                `;
+                container.appendChild(b);
+            }
         });
 
         // 照片墙关闭按钮
