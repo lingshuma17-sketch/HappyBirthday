@@ -951,6 +951,8 @@
             ui.cardContainer.classList.remove('hidden');
             giftOpened = true;
             birthdaySong.play().catch(() => {});
+            // 打开礼物后就显示彩蛋按钮（不需要等到收起卡片）
+            document.getElementById('easter-egg-btn').classList.remove('hidden');
         });
 
         // "What's the surprise" 按钮 -> 翻转到背面 (第一页)
