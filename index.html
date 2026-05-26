@@ -209,16 +209,10 @@
                 <span id="status-text" class="text-xs md:text-sm text-gray-300 tracking-wider">SYSTEM READY</span>
             </div>
             <div class="flex gap-2">
-                <button id="settings-toggle" class="interactive-element p-3 glass-panel hover:bg-white/20 transition rounded-full active:scale-90 text-sm">🎨</button>
                 <button id="music-btn" class="interactive-element p-3 glass-panel hover:bg-white/20 transition rounded-full active:scale-90">🎵</button>
             </div>
         </div>
         
-        <div id="settings-panel">
-            <div class="color-control"><span>底层颜色</span><input type="color" id="picker-bottom" value="#3d1500"></div>
-            <div class="color-control"><span>顶层颜色</span><input type="color" id="picker-top" value="#5c2600"></div>
-            <div class="color-control"><span>奶油颜色</span><input type="color" id="picker-cream" value="#D4A017"></div>
-        </div>
 
         <div id="center-instruction" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none w-full z-0">
             <div class="flex items-center justify-center gap-4 mb-2">
@@ -377,8 +371,6 @@
             cardContainer: document.getElementById('flip-card-container'), 
             nextBtn: document.getElementById('next-surprise-btn'),
             closeBtn: document.getElementById('close-card-btn'),
-            settingsPanel: document.getElementById('settings-panel'),
-            settingsToggle: document.getElementById('settings-toggle'),
             topBanner: document.getElementById('top-banner'),
             startBtn: document.getElementById('start-btn'),
             loadingText: document.getElementById('loading-text'),
@@ -723,7 +715,6 @@
             log('展示蛋糕，开启吹气检测');
             currentState = STATE.BLOWING;
             transitionTo('cake');
-            ui.settingsPanel.style.display = 'flex';
             ui.mainText.innerText = "";
             ui.subText.innerText = "";
             ui.topBanner.classList.remove('hidden'); 
@@ -738,7 +729,6 @@
             ui.statusText.innerText = "WISH GRANTED";
             ui.blowMeter.style.opacity = '0';
             ui.blowHint.style.opacity = '0';
-            ui.settingsPanel.style.display = 'none';
             
             document.body.classList.add('shake-screen');
             setTimeout(() => document.body.classList.remove('shake-screen'), 500);
@@ -762,7 +752,7 @@
         function isOkGesture(lm) {
             // 拇指尖(4)与食指尖(8)靠近，其余三指伸展
             const dist = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
-            return dist < 0.08 && lm[12].y < lm[10].y && lm[16].y < lm[14].y && lm[20].y < lm[18].y;
+            return dist < 0.13 && lm[12].y < lm[10].y && lm[16].y < lm[14].y && lm[20].y < lm[18].y;
         }
 
         function isFistGesture(lm) {
@@ -801,15 +791,6 @@
             }, 900);
         }
 
-        document.getElementById('picker-bottom').addEventListener('input', (e) => CAKE_THEME.bottom = e.target.value);
-        document.getElementById('picker-top').addEventListener('input', (e) => CAKE_THEME.top = e.target.value);
-        document.getElementById('picker-cream').addEventListener('input', (e) => CAKE_THEME.cream = e.target.value);
-        
-        ui.settingsToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const display = ui.settingsPanel.style.display;
-            ui.settingsPanel.style.display = (display === 'none' || display === '') ? 'flex' : 'none';
-        });
 
         // 第一页祝福语
         const wishes_part1 = [
@@ -1071,7 +1052,7 @@
                     if (currentState === STATE.CHEERS && !cheersPhase && !giftOpened) {
                         if (isOkGesture(lm)) {
                             okFrameCount++;
-                            if (okFrameCount >= 8) {
+                            if (okFrameCount >= 5) {
                                 okFrameCount = 0;
                                 showGift();
                             }
