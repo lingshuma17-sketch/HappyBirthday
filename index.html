@@ -147,39 +147,39 @@
         }
         #photo-wall-close:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
 
-        /* 3D 轮播 */
+        /* 磁力悬浮照片墙 */
         #pw-scene {
-            position: absolute; top: 54%; left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            transform-origin: center center;
-            perspective: 1100px;
+            position: absolute; inset: 0; overflow: hidden;
         }
-        #pw-carousel {
-            width: 220px; height: 290px;
-            transform-style: preserve-3d;
-            transform: rotateY(0deg);
-            position: relative;
-        }
-        .pw-slide {
+        .pw-mag-card {
             position: absolute; top: 0; left: 0;
-            width: 220px; height: 290px;
-            transform: rotateY(calc(var(--i) * 60deg)) translateZ(360px);
-            backface-visibility: hidden;
+            cursor: pointer; will-change: transform; user-select: none;
         }
-        .pw-slide-inner {
+        .pw-card-inner {
             background: white;
-            padding: 10px 10px 48px 10px;
+            padding: 8px 8px 42px 8px;
             width: 100%; height: 100%;
             box-sizing: border-box;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.75);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+            border-radius: 2px;
+            transition: box-shadow 0.3s;
         }
-        .pw-slide img {
-            width: 100%; height: 190px;
+        .pw-mag-card:hover .pw-card-inner {
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9), 0 0 40px rgba(212,160,23,0.25);
+        }
+        .pw-mag-card img {
+            width: 100%; height: 100%;
             object-fit: cover; display: block;
+            pointer-events: none;
         }
-        .pw-slide-label {
-            text-align: center; color: #888; font-size: 12px;
-            font-family: 'Dancing Script', cursive; padding-top: 8px;
+        .pw-card-img-wrap {
+            width: 100%; flex: 1; overflow: hidden;
+        }
+        .pw-card-label {
+            text-align: center; color: #888; font-size: 11px;
+            font-family: 'Dancing Script', cursive;
+            padding-top: 6px; position: absolute;
+            bottom: 10px; left: 0; right: 0;
         }
 
         /* 粒子小球 */
@@ -286,48 +286,45 @@
         <button id="photo-wall-close">✕</button>
         <div id="pw-bubbles"></div>
         <div id="pw-gesture-hint">
-            <div class="pw-hint-item">👈👉 拨动切换</div>
-            <div class="pw-hint-item">🖐️ 张手放大</div>
-            <div class="pw-hint-item">✊ 握拳缩小</div>
+            <div class="pw-hint-item">移动手/光标 吸附照片</div>
+            <div class="pw-hint-item">点击照片 放大查看</div>
         </div>
 
         <div id="pw-scene">
-            <div id="pw-carousel">
-                <div class="pw-slide" style="--i:0">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174603_244_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174603_244_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
-                <div class="pw-slide" style="--i:1">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174604_245_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174604_245_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
-                <div class="pw-slide" style="--i:2">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174605_246_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174605_246_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
-                <div class="pw-slide" style="--i:3">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174607_248_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174607_248_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
-                <div class="pw-slide" style="--i:4">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174641_249_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174641_249_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
-                <div class="pw-slide" style="--i:5">
-                    <div class="pw-slide-inner">
-                        <img src="photo/微信图片_20260526174736_250_3.jpg">
-                        <div class="pw-slide-label">Happy Birthday ✨</div>
-                    </div>
+            </div>
+            <div class="pw-mag-card">
+                <div class="pw-card-inner">
+                    <div class="pw-card-img-wrap"><img src="photo/微信图片_20260526174736_250_3.jpg"></div>
+                    <div class="pw-card-label">Happy Birthday ✨</div>
                 </div>
             </div>
         </div>
@@ -487,13 +484,12 @@
         let cheersPhase = false;
         let giftOpened = false;
 
-        // 3D 轮播状态 — 完全速度驱动，镜像粒子系统
-        let carouselAngle = 0;
-        let carouselVelocity = 0;
-        let carouselScale = 1;
-        let zoomVelocity = 0;
-        let lastPalmX = null;
-        let handInWall = false;
+        // 磁力悬浮照片墙状态
+        let magCards = [];
+        let magCursorX = 0;
+        let magCursorY = 0;
+        let magFocused = -1;
+        let magRafId = null;
         
         let currentState = STATE.INTRO;
         let interactionMode = 0; 
@@ -914,16 +910,126 @@
             }, 1500);
         }
 
-        // 3D 轮播函数
-        function updateCarousel() {
-            const carousel = document.getElementById('pw-carousel');
-            const pwScene = document.getElementById('pw-scene');
-            if (carousel) carousel.style.transform = `rotateY(${carouselAngle}deg)`;
-            if (pwScene) pwScene.style.transform = `translate(-50%, -50%) scale(${carouselScale})`;
+        // 磁力悬浮函数
+        function applyCardTransform(card) {
+            const hw = card.cardW / 2, hh = card.cardH / 2;
+            card.el.style.transform = `translate(${card.x - hw}px, ${card.y - hh}px) rotate(${card.curRot}deg) scale(${card.scale})`;
+            card.el.style.opacity = card.opacity;
+            card.el.style.zIndex = card.scale > 1.1 ? 10 : 1;
         }
 
-        function carouselNext() { carouselAngle -= 60; updateCarousel(); }
-        function carouselPrev() { carouselAngle += 60; updateCarousel(); }
+        function initMagWall() {
+            const wall = document.getElementById('photo-wall');
+            const W = wall.offsetWidth, H = wall.offsetHeight;
+            const isMob = W < 600;
+            const cardW = isMob ? 125 : 148;
+            const cardH = isMob ? 168 : 198;
+            const cols = isMob ? 2 : 3, rows = isMob ? 3 : 2;
+            const spX = isMob ? W * 0.44 : W * 0.29;
+            const spY = isMob ? H * 0.30 : H * 0.40;
+            const baseRots = [-8, 4, -5, 6, -3, 9];
+
+            const homes = [];
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const idx = r * cols + c;
+                    if (idx < 6) homes.push({
+                        x: W/2 + (c - (cols-1)/2) * spX + (Math.random()-0.5)*25,
+                        y: H*0.52 + (r - (rows-1)/2) * spY + (Math.random()-0.5)*20,
+                        rot: baseRots[idx]
+                    });
+                }
+            }
+
+            magFocused = -1;
+            magCursorX = W / 2;
+            magCursorY = H / 2;
+
+            const cardEls = wall.querySelectorAll('.pw-mag-card');
+            magCards = [];
+            cardEls.forEach((el, i) => {
+                const h = homes[i] || { x: W/2, y: H/2, rot: 0 };
+                el.style.width = cardW + 'px';
+                el.style.height = cardH + 'px';
+                // resize img wrap
+                const imgWrap = el.querySelector('.pw-card-img-wrap');
+                if (imgWrap) imgWrap.style.height = (cardH - 50) + 'px';
+                const card = { el, x: h.x, y: h.y, vx: 0, vy: 0,
+                    homeX: h.x, homeY: h.y, baseRot: h.rot, curRot: h.rot,
+                    scale: 1, opacity: 1, cardW, cardH };
+                magCards.push(card);
+                applyCardTransform(card);
+                el.onclick = (e) => {
+                    e.stopPropagation();
+                    magFocused = (magFocused === i) ? -1 : i;
+                };
+            });
+
+            wall.onclick = (e) => {
+                if (!e.target.closest('.pw-mag-card')) magFocused = -1;
+            };
+
+            if (magRafId) cancelAnimationFrame(magRafId);
+            animateMagWall();
+        }
+
+        function animateMagWall() {
+            const wall = document.getElementById('photo-wall');
+            if (!wall || wall.classList.contains('hidden')) { magRafId = null; return; }
+            magRafId = requestAnimationFrame(animateMagWall);
+            const W = wall.offsetWidth, H = wall.offsetHeight;
+
+            magCards.forEach((card, i) => {
+                if (magFocused === i) {
+                    card.x += (W/2 - card.x) * 0.10;
+                    card.y += (H*0.50 - card.y) * 0.10;
+                    card.curRot += (0 - card.curRot) * 0.10;
+                    card.scale += (1.75 - card.scale) * 0.10;
+                    card.opacity += (1 - card.opacity) * 0.10;
+                    card.vx = 0; card.vy = 0;
+                } else if (magFocused !== -1) {
+                    card.x += (card.homeX - card.x) * 0.08;
+                    card.y += (card.homeY - card.y) * 0.08;
+                    card.curRot += (card.baseRot - card.curRot) * 0.08;
+                    card.scale += (0.82 - card.scale) * 0.08;
+                    card.opacity += (0.2 - card.opacity) * 0.08;
+                    card.vx = 0; card.vy = 0;
+                } else {
+                    const dx = magCursorX - card.x, dy = magCursorY - card.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    const maxDist = Math.min(W, H) * 0.38;
+                    if (dist < maxDist && dist > 0) {
+                        const force = (1 - dist/maxDist) * 0.18;
+                        card.vx += dx * force;
+                        card.vy += dy * force;
+                    }
+                    card.vx += (card.homeX - card.x) * 0.032;
+                    card.vy += (card.homeY - card.y) * 0.032;
+                    card.vx *= 0.78; card.vy *= 0.78;
+                    card.x += card.vx; card.y += card.vy;
+                    card.curRot += (card.baseRot + card.vx * 1.8 - card.curRot) * 0.12;
+                    card.scale += (1 - card.scale) * 0.10;
+                    card.opacity += (1 - card.opacity) * 0.10;
+                }
+                applyCardTransform(card);
+            });
+        }
+
+        // 照片墙鼠标/触摸跟踪
+        (function() {
+            const wall = document.getElementById('photo-wall');
+            wall.addEventListener('mousemove', (e) => {
+                const r = wall.getBoundingClientRect();
+                magCursorX = e.clientX - r.left;
+                magCursorY = e.clientY - r.top;
+            });
+            wall.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const r = wall.getBoundingClientRect();
+                magCursorX = e.touches[0].clientX - r.left;
+                magCursorY = e.touches[0].clientY - r.top;
+            }, {passive: false});
+        })();
 
         function isOkGesture(lm) {
             // 剪刀手✌️：食指+中指伸直，无名指+小拇指弯曲
@@ -1090,14 +1196,8 @@
             const wall = document.getElementById('photo-wall');
             wall.classList.remove('hidden');
 
-            // 重置轮播状态
-            carouselAngle = 0;
-            carouselVelocity = 0;
-            carouselScale = 1;
-            zoomVelocity = 0;
-            lastPalmX = null;
-            handInWall = false;
-            updateCarousel();
+            // 初始化磁力墙
+            initMagWall();
 
             // 生成彩色粒子小球
             const container = document.getElementById('pw-bubbles');
@@ -1125,10 +1225,8 @@
         document.getElementById('photo-wall-close').addEventListener('click', (e) => {
             e.stopPropagation();
             document.getElementById('photo-wall').classList.add('hidden');
-            carouselVelocity = 0;
-            zoomVelocity = 0;
-            lastPalmX = null;
-            handInWall = false;
+            magFocused = -1;
+            if (magRafId) { cancelAnimationFrame(magRafId); magRafId = null; }
         });
 
         
@@ -1277,29 +1375,11 @@
                     }
                     const lm = results.multiHandLandmarks[0];
 
-                    // 照片墙开启时：专属手势，跳过背景检测
+                    // 照片墙开启时：手掌位置直接映射为磁力光标
                     if (!document.getElementById('photo-wall').classList.contains('hidden')) {
-                        handInWall = true;
-
-                        // 连续旋转：手掌位移累积速度（镜像主页手势旋转逻辑）
-                        const palmX = lm[9].x;
-                        if (lastPalmX !== null) {
-                            const delta = palmX - lastPalmX;
-                            if (Math.abs(delta) > 0.001) {
-                                carouselVelocity += delta * -120;
-                            }
-                        }
-                        lastPalmX = palmX;
-
-                        // 连续缩放：持续检测手势，每帧设定速度
-                        if (isOpenPalmGesture(lm)) {
-                            zoomVelocity = 0.012;
-                        } else if (isFistGesture(lm)) {
-                            zoomVelocity = -0.012;
-                        } else {
-                            zoomVelocity = 0;
-                        }
-
+                        const wall = document.getElementById('photo-wall');
+                        magCursorX = (1 - lm[9].x) * wall.offsetWidth;
+                        magCursorY = lm[9].y * wall.offsetHeight;
                         return;
                     }
 
@@ -1379,21 +1459,6 @@
         function render() {
             requestAnimationFrame(render);
             updateParticles();
-
-            // 轮播每帧更新（镜像粒子系统的速度衰减逻辑）
-            const photoWall = document.getElementById('photo-wall');
-            if (photoWall && !photoWall.classList.contains('hidden')) {
-                carouselVelocity *= 0.88;
-                carouselAngle += carouselVelocity;
-                carouselScale = Math.max(0.5, Math.min(1.6, carouselScale + zoomVelocity));
-                if (!handInWall) {
-                    zoomVelocity *= 0.75;
-                    lastPalmX = null;
-                }
-                handInWall = false;
-                updateCarousel();
-            }
-
             renderer.render(scene, camera);
         }
     </script>
