@@ -249,7 +249,7 @@
             <h1 class="text-6xl md:text-7xl font-handwriting text-transparent bg-clip-text bg-gradient-to-r from-[#c8860a] to-[#e8c35a] drop-shadow-lg mb-4 animate-float">Cheers to you</h1>
             <p class="text-5xl mb-6">🥂</p>
             <p class="text-xl text-white/90 mb-2">这里有一份礼物，要帮你打开吗？</p>
-            <p class="text-sm text-[#D4A017]/60 mb-6">同意的话，比一个 OK 哦 👌</p>
+            <p class="text-sm text-[#D4A017]/60 mb-6">同意的话，比一个剪刀手哦 ✌️</p>
         </div>
 
         <button id="reveal-btn" class="safe-click-area hidden px-10 py-5 bg-white text-[#3d1500] rounded-full font-bold text-2xl shadow-[0_0_60px_rgba(212,160,23,0.8)] hover:scale-105 transition-transform duration-300 animate-float">🎁 打开礼物</button>
@@ -750,9 +750,11 @@
         }
 
         function isOkGesture(lm) {
-            // 拇指尖(4)与食指尖(8)靠近，其余三指伸展
-            const dist = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
-            return dist < 0.13 && lm[12].y < lm[10].y && lm[16].y < lm[14].y && lm[20].y < lm[18].y;
+            // 剪刀手✌️：食指+中指伸直，无名指+小拇指弯曲
+            return lm[8].y < lm[6].y &&
+                   lm[12].y < lm[10].y &&
+                   lm[16].y > lm[14].y &&
+                   lm[20].y > lm[18].y;
         }
 
         function isFistGesture(lm) {
@@ -1047,7 +1049,7 @@
                     if (currentState === STATE.IDLE) {
                         startSequence();
                     }
-                    // Cheers 阶段：OK 手势直接触发礼物
+                    // Cheers 阶段：剪刀手✌️触发礼物
                     const lm = results.multiHandLandmarks[0];
                     if (currentState === STATE.CHEERS && !cheersPhase && !giftOpened) {
                         if (isOkGesture(lm)) {
